@@ -1,3 +1,65 @@
+# KidsTracker — Rastreador Infantil BLE + 4G + GPS
+
+Este repositório é a evolução do projeto open-source **SafeTrack**, originalmente criado por Lawrence Roble (`law4percent/SafeTrack`) e distribuído sob licença MIT.
+
+O **KidsTracker** mantém a base técnica do SafeTrack — ESP32-C3, modem 4G/GNSS, aplicativo Flutter/Android, Firebase, servidor Python, SOS, mapa, histórico e notificações — e adiciona como diferencial principal uma arquitetura **BLE-first** de proximidade entre a TAG e o celular do responsável.
+
+## Arquitetura oficial KidsTracker
+
+### Criança próxima do responsável
+
+```text
+TAG ESP32-C3 ←──── BLE ────→ ANDROID
+```
+
+Enquanto o BLE estiver saudável:
+
+- o Android monitora proximidade;
+- a TAG permanece em baixo consumo;
+- GNSS e 4G podem permanecer reduzidos quando possível;
+- o backend não participa da proximidade local.
+
+### Afastamento confirmado
+
+```text
+BLE LOST
+   ↓
+ESP32 confirma afastamento
+   ↓
+GNSS ON
+   ↓
+4G ON
+   ↓
+CLOUD/BACKEND
+   ↓
+ANDROID
+   ↓
+ALERTA + MAPA
+```
+
+Princípio central do projeto:
+
+**detectar rápido → alertar rápido → localizar rápido.**
+
+## Estratégia oficial
+
+O projeto **não será reescrito do zero**. O SafeTrack é a base oficial para firmware, app e backend. As melhorias serão implementadas de forma incremental, começando por BLE e máquina de estados de proximidade, depois integração com GNSS/4G, alertas e otimização de bateria.
+
+A especificação completa está em:
+
+- `docs/KIDSTRACKER_PROJECT_RULES.md`
+
+## Foco inicial
+
+- Hardware principal: ESP32-C3 + modem 4G/GNSS
+- Aplicativo: Android
+- Proximidade: BLE
+- Comunicação remota: 4G → backend → Android
+- Emergência: BLE perdido ou SOS
+- Segurança: autenticação por dispositivo, comunicação criptografada e controle por responsáveis autorizados
+
+---
+
 # SafeTrack: IoT-Based Child Safety Monitoring System with AI-Assisted Parental Guidance
 
 SafeTrack is an integrated child safety monitoring system that combines a custom-built
@@ -337,8 +399,8 @@ Firebase Realtime Database
 <!-- Replace with your actual 3D render screenshots -->
 
 | Front | Back | Assembled |
-|---|---|---|
-| ![Front](docs/images/3d_front.png) | ![Back](docs/images/3d_back.png) | ![Assembled](docs/images/3d_assembled.png) |
+|:---:|:---:|:---:|
+| <img src="docs/images/3d_front.png" width="200"> | <img src="docs/images/3d_back.png" width="200"> | <img src="docs/images/3d_assembled.png" width="200"> |
 
 > **[⬇️ Download STL File (Google Drive)](https://drive.google.com/drive/folders/1EYjyFP11LW7h_nx68BAPlHHjCYp_BCfe)**
 >
@@ -361,46 +423,22 @@ Firebase Realtime Database
 | Route Registration | Alerts | AI Assistant |
 |:---:|:---:|:---:|
 | <img src="docs/images/ui_route_registration.jpg" width="200"> | <img src="docs/images/ui_alerts.jpg" width="200"> | <img src="docs/images/ui_ai_assistant.jpg" width="200"> |
-| Tap-to-drop waypoint editor with deviation threshold | Full alert history with 6 filter chips | Gemini AI chat with real Firebase context |
+| Tap-to-drop waypoint editor with threshold slider | Full alert history with 6 filter chips | Gemini AI chat with real Firebase context |
 
 ---
 
 ## Downloads
 
-### 📱 Android APK
-
-> **[⬇️ Download SafeTrack APK (Google Drive)](https://drive.google.com/drive/folders/1AYsSuv9e3lkmnOq0V9bhxJvm2ejC88V-)**
->
-> Minimum Android version: API 21 (Android 5.0)
->
-> **Install instructions:**
-> 1. Download the APK on your Android phone
-> 2. Settings → Security → Enable **Install from unknown sources**
-> 3. Open the APK and tap **Install**
-> 4. Open SafeTrack, sign up, and link your device
+The original SafeTrack project includes app, firmware, server and documentation resources. KidsTracker preserves the upstream foundation while evolving toward BLE-first proximity monitoring.
 
 ---
 
 ## Development Environment
 
-| Tool | Version / Detail |
-|---|---|
-| Flutter SDK | ≥ 3.9.2 (Dart ≥ 3.x) |
-| Python | ≥ 3.10 |
-| Arduino IDE / PlatformIO | ESP32-C3 firmware development |
-| Firebase Console | Project configuration and RTDB |
-| Android Studio | IDE for Flutter development |
-| Target Platform | Android (API 21+) |
-| Database | Firebase Realtime Database |
-| Notifications | Firebase Cloud Messaging (FCM) |
-| AI API | Google Gemini API |
-| Mapping | OpenStreetMap + Nominatim (no API key) |
+Preserve the original SafeTrack setup requirements while introducing KidsTracker changes incrementally and with rollback-safe commits.
 
 ---
 
 ## Acknowledgments
 
-- Google Firebase for real-time cloud infrastructure and FCM
-- Google Gemini for AI API access
-- OpenStreetMap and Nominatim contributors for open mapping and geocoding
-- The Flutter, ESP32, and Python open-source communities
+KidsTracker is based on the MIT-licensed SafeTrack project by Lawrence Roble (`law4percent/SafeTrack`). The original copyright notice and MIT license are preserved in this repository.
